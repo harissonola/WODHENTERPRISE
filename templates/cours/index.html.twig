@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Cours | {{ formation.name }}
+{% endblock %}
+
+{% block body %}
+  {# NB: ne pas oublie les verifications pour le premium et la connexion #}
+  <div class="container py-3 mt-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="nav-align-left row">
+          <ul class="nav nav-pills col-md-3" role="tablist">
+          <div class="row justify-content-center">
+          {% for cour in formation.cours %}
+              <div class="col-md-12">
+              <li class="nav-item">
+                <button type="button" class="nav-link {{ loop.first ? 'active' : '' }}" role="tab" data-bs-toggle="tab" data-bs-target="#cour-{{ loop.index }}">{{ cour.numero }}- {{ cour.name }}</button>
+              </li>
+              </div>
+              
+
+            {% endfor %}
+          </div>
+            
+          </ul>
+          <div class="tab-content col-md-9">
+            {% if formation.premium == 1 %}
+              {% if app.user %}
+                {% if app.user.premium %}
+                  {% if app.user.premium.expiredAt >= date %}
+                    {% for cour in formation.cours %}
+                      <link rel="stylesheet" href="/sneat/assets/vendor/libs/plyr/plyr.css" />
+                      <div class="tab-pane fade show {{ loop.first ? 'active' : '' }}" id="cour-{{ loop.index }}">
+                        <video style="max-height: 100%;" class="w-100 mb-0" poster="{{ asset('cours/img/') ~ cour.miniatur }}" id="plyr-video-player-{{ loop.index }}" playsinline controls>
+                          <source src="{{ asset('cours/video/') ~ cour.video }}" />Votre navigateur ne supporte pas la lecture de vidéos.
+                        </video>
+                      </div>
+
+                      <script src="/sneat/assets/vendor/libs/plyr/plyr.js"></script>
+                      <script>
+                  const videoPlayer_{{ loop.index }} = new Plyr('#plyr-video-player-{{ loop.index }}');
+                </script>
+                    {% endfor %}
+                  {% else %}
+                    <h5 class="text-danger text-center">
+                      Vous n'avez pas acces au
+                      <a href="{{ path('app_premium') }}">Premium</a>
+                    </h5>
+                    <p class="text-center">Veillez vous abonne pour suivre cette formation</p>
+                  {% endif %}
+                {% else %}
+                  <h5 class="text-danger text-center">
+                    Vous n'avez pas acces au
+                    <a href="{{ path('app_premium') }}">Premium</a>
+                  </h5>
+                  <p class="text-center">Veillez vous abonne pour suivre cette formation</p>
+                {% endif %}
+              {% else %}
+                <h5 class="text-danger text-center">
+                  Vous n'etes pas
+                  <a href="{{ path('app_login') }}">Connecter</a>
+                </h5>
+                <p class="text-center">Veillez vous connectez pour suivre cette formation</p>
+              {% endif %}
+            {% else %}
+              {% for cour in formation.cours %}
+                <link rel="stylesheet" href="/sneat/assets/vendor/libs/plyr/plyr.css" />
+                <div class="tab-pane fade show {{ loop.first ? 'active' : '' }}" id="cour-{{ loop.index }}">
+                  <video style="max-height: 100%;" class="w-100 mb-0" poster="{{ asset('cours/img/') ~ cour.miniatur }}" id="plyr-video-player-{{ loop.index }}" playsinline controls>
+                    <source src="{{ asset('cours/video/') ~ cour.video }}" />
+                  </video>
+                </div>
+
+                <script src="/sneat/assets/vendor/libs/plyr/plyr.js"></script>
+                <script>
+                  const videoPlayer_{{ loop.index }} = new Plyr('#plyr-video-player-{{ loop.index }}');
+                </script>
+              {% endfor %}
+            {% endif %}
+
+            <script>
+              document.addEventListener('DOMContentLoaded', function () {
+                // Sélectionnez tous les boutons d'onglet
+                const tabButtons = document.querySelectorAll('[data-bs-toggle="tab"]')
+              
+                // Ajoutez un gestionnaire d'événements pour chaque bouton d'onglet
+                tabButtons.forEach((tabButton) => {
+                  tabButton.addEventListener('shown.bs.tab', function (event) {
+                    // Récupérez tous les vidéos
+                    const videos = document.querySelectorAll('video')
+              
+                    // Mettez en pause toutes les vidéos
+                    videos.forEach((video) => {
+                      video.pause()
+                    })
+              
+                    // Si vous voulez réinitialiser les vidéos, décommentez la ligne suivante :
+                    //video.currentTime = 0;
+                  })
+                })
+              })
+            </script>
+          </div>
+          <div class="mb-3"></div>
+        </div>
+        <div class="card-footer">
+          <div class="row">
+            <div class="col-md-12 d-flex">
+              <button class="btn rounded-pill me-2 btn-outline-{{ formation.premium == 1 ? 'warning' : 'success' }} me-auto">{{ formation.premium == 1 ? 'Premium' : 'Gratuit' }}</button>
+              {% if app.user %}
+                {% if app.user.premium %}
+                  {% if app.user.premium.expiredAt >= date %}
+                    <button class="btn rounded-pill me-2 btn-primary ms-auto">
+                      <i class="tf-icons fas fa-download bx-18px me-2"></i>
+                      Telecharger
+                    </button>
+                  {% endif %}
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

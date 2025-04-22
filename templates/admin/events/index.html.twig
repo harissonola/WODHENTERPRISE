@@ -1,0 +1,121 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}
+  Liste |   Events
+{% endblock %}
+
+{% block body %}
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="/data/jquery.dataTables.min.css" />
+  <link rel="stylesheet" href="/data/buttons.dataTables.min.css" />
+
+
+  <div class="py-5 mt-5">
+    <div class="card card-datatable recent-sales mb-3">
+      <div class="card-body overflow-y-auto">
+        <h5 class="card-title">
+          Events
+          <span>| Gérer les différents Events</span>
+        </h5>
+
+        <div class="card-datatable table-responsive pt-0">
+          <table class="datatables-basic table border-top">
+            <thead>
+              <tr>
+                <th scope="col">N</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Slug</th>
+                <th scope="col">Descrition</th>
+                <th scope="col">Image</th>
+                <th scope="col">Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for event in events %}
+                <tr>
+                  <th scope="row">{{ loop.index }}</th>
+                  <td>{{ event.name }}</td>
+                  <td>{{ event.slug }}</td>
+                  <td>{{ event.description }}</td>
+                  <td>
+                    <img src="{{ asset('evenements/img/') }}{{ event.image }}" alt="" class="img-fluid rounded" />
+                  </td>
+                  <td>
+                    {{ event.createdAt|date() }}
+                    {# {{ createdAt|format_datetime() }} #}
+                  </td>
+                  <td class="d-flex gap-2">
+                    <a href="{{ path('app_admin_events_edit', { id: event.id }) }}" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="{% trans %}Modifier{% endtrans %}" class="btn btn-warning"><i class="fa fa-edit"></i></a>
+                    <a onclick='return confirm("Voulez vous vraiment supprimer ce events ?")' href="{{ path('app_admin_events_delete', { id: event.id }) }}" class="btn btn-danger text-white" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="{% trans %}Supprimer{% endtrans %}"><i class="bi bi-archive-fill"></i></a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  <!-- jQuery -->
+  <script src="/data/jquery-3.7.1.min.js"></script>
+
+  <!-- DataTables JS -->
+  <script src="/data/jquery.dataTables.min.js" defer></script>
+  <script src="/data/dataTables.buttons.min.js" defer></script>
+  <script src="/data/buttons.html5.min.js" defer></script>
+  <script src="/data/buttons.print.min.js" defer></script>
+  <script src="/data/jszip.min.js" defer></script>
+  <script src="/data/pdfmake.min.js" defer></script>
+  <script src="/data/vfs_fonts.js" defer></script>
+
+  <script>
+    $(document).ready(function () {
+      $('.datatables-basic').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+          {
+            extend: 'collection',
+            text: '<i class="bx bx-export me-1"></i>   {% trans %}Exporter  {% endtrans %}',
+            className: 'btn btn-primary dropdown-toggle',
+            buttons: [
+              {
+                extend: 'copy',
+                className: 'dropdown-item',
+                text: '<i class="bx bx-copy me-1"></i>   {% trans %}Copier  {% endtrans %}'
+              },
+              {
+                extend: 'csv',
+                className: 'dropdown-item',
+                text: '<i class="bx bx-file me-1"></i> CSV'
+              },
+              {
+                extend: 'excel',
+                className: 'dropdown-item',
+                text: '<i class="bx bx-file me-1"></i> Excel'
+              },
+              {
+                extend: 'pdf',
+                className: 'dropdown-item',
+                text: '<i class="bx bxs-file-pdf me-1"></i> PDF'
+              },
+              {
+                extend: 'print',
+                className: 'dropdown-item',
+                text: '<i class="bx bx-printer me-1"></i>   {% trans %}Imprimer  {% endtrans %}'
+              }
+            ]
+          }
+        ],
+        responsive: true,
+        language: {
+          url: '/data/{% trans %}fr-FR {% endtrans %}.json',
+          url: '/data/{% trans %}fr-FR {% endtrans %}.json',
+        }
+      })
+    })
+  </script>
+{% endblock %}

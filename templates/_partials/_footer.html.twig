@@ -1,0 +1,73 @@
+<footer class="content-footer footer bg-footer-theme">
+  <div class="container-fluid d-flex flex-md-row flex-column justify-content-between align-items-md-center gap-1 py-4" style="font-family: 'Times New Roman', Times, serif;">
+    <div>
+      <a href="{{ path('app_main') }}" class="footer-text fw-bold">WODH ENTERPRISE</a> ©
+    </div>
+    <div>
+      <a href="{{ path('app_faq') }}" class="footer-link me-6">FAQ</a>
+      <a href="{{ path('app_contact') }}" class="footer-link me-6">Contact</a>
+      <a href="{{ path('app_confidentialite') }}" class="footer-link">Politique de confidentialité</a>
+    </div>
+
+    <a href="#" class="back-to-top active d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <style>
+      /*--------------------------------------------------------------
+                              # Back to top button
+                              --------------------------------------------------------------*/
+      .back-to-top {
+        position: fixed;
+        opacity: 0;
+        visibility: hidden;
+        right: 15px;
+        bottom: 15px;
+        z-index: 99999;
+        background: rgba(65, 83, 241, 0.57);
+        width: 40px;
+        height: 40px;
+        border-radius: 4px;
+        transition: all 0.4s;
+      }
+      
+      .back-to-top i {
+        font-size: 24px;
+        color: #fff;
+        line-height: 0;
+      }
+      
+      .back-to-top:hover {
+        background: rgba(103, 117, 244, 0.84);
+        color: #fff;
+      }
+      
+      .back-to-top.active {
+        visibility: visible;
+        opacity: 1;
+      }
+    </style>
+
+    <script>
+      // Fonction pour gérer l'affichage du bouton de retour en haut
+      function toggleBackToTopButton() {
+        const backToTopButton = document.querySelector('.back-to-top')
+      
+        // Vérifier si le scrollY est supérieur à 100
+        if (window.scrollY > 100) {
+          backToTopButton.classList.add('active')
+        } else {
+          backToTopButton.classList.remove('active')
+        }
+      }
+      
+      // Vérifier le défilement au moment du chargement de la page et lors du défilement
+      window.addEventListener('scroll', toggleBackToTopButton)
+      
+      // Vérifier immédiatement au chargement de la page si le scrollY est supérieur à 100
+      document.addEventListener('DOMContentLoaded', toggleBackToTopButton)
+      
+      {# $('.back-to-top').on('click', function (e) {
+        window.scrollTo
+      }) #}
+    </script>
+  </div>
+</footer>

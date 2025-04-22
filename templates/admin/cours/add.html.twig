@@ -1,0 +1,26 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}
+  {% if app.current_route == 'app_admin_cours_add' %}
+    Ajouter
+  {% else %}
+    Modifier
+  {% endif %}| Cours
+{% endblock %}
+
+{% block body %}
+  <div class="py-4 mt-5">
+    <div class="card">
+      <h1 class="card-title text-center">
+        {% if app.current_route == 'app_admin_cours_add' %}
+          Ajouter
+        {% else %}
+          Modifier
+        {% endif %}un Cours
+      </h1>
+      <div class="card-body">
+        {{ form(form, { method: 'POST' }) }}
+      </div>
+    </div>
+  </div>
+{% endblock %}

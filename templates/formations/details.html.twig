@@ -1,0 +1,359 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  {{ formation.name }}
+{% endblock %}
+
+{% block body %}
+  <link rel="stylesheet" href="/sneat/assets/vendor/libs/animate-css/animate.css" />
+  <link rel="stylesheet" href="/sneat/assets/vendor/libs/sweetalert2/sweetalert2.css" />
+  <div class="">
+    <div class="" style="background: linear-gradient(231deg, #0132a3 -6.4%, #35373b 105.25%) !important; height: 100vh;">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <div class="py-3 mt-2">
+              <!-- Breadcrumb -->
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-style1">
+                  <li class="breadcrumb-item">
+                    <a href="{{ path('app_main') }}" class="text-primary">Accueil</a>
+                  </li>
+                  <li class="breadcrumb-item">
+                    <a href="{{ path('app_formations_index') }}" class="text-primary">Formations</a>
+                  </li>
+                  <li class="breadcrumb-item active text-white">{{ formation.name }}</li>
+                </ol>
+              </nav>
+            </div>
+
+            <h1 class="text-primary fw-bold">
+              {{ formation.name }}
+              <small>
+                {% if formation.premium == true %}
+                  <span class="badge bg-warning">Premium</span>
+                {% else %}
+                  <span class="badge bg-success">Gratuit</span>
+                {% endif %}
+              </small>
+            </h1>
+            <p class="d-dark-none text-200 text-justify">{{ formation.descriptionFull }}</p>
+            <p class="d-light-none text-justify" style="color: #D3D3D3 !important;">{{ formation.descriptionFull }}</p>
+
+            {% if formation.premium == 1 %}
+              {% if app.user %}
+                {% if app.user.premium %}
+                  {% if app.user.premium.expiredAt <= date %}
+                    <button class="btn btn-outline-primary me-auto mb-1 tada-animation">
+                      <i class="fas fa-play me-2"></i>
+                      Commencer
+                    </button>
+                  {% else %}
+                    <a href="{{ path('app_cours', { slug: formation.slug }) }}" class="btn btn-outline-primary text-white">
+                      <i class="fas fa-play me-2"></i>
+                      Commencer
+                    </a>
+                  {% endif %}
+                {% else %}
+                  <button class="btn btn-outline-primary me-auto mb-1 tada-animation">
+                    <i class="fas fa-play me-2"></i>
+                    Commencer
+                  </button>
+                {% endif %}
+              {% else %}
+                <button class="btn btn-outline-primary me-auto mb-1 tada-animation">
+                  <i class="fas fa-play me-2"></i>
+                  Commencer
+                </button>
+              {% endif %}
+            {% else %}
+              <a href="{{ path('app_cours', { slug: formation.slug }) }}" class="btn btn-outline-primary text-white">
+                <i class="fas fa-play me-2"></i>
+                Commencer
+              </a>
+            {% endif %}
+          </div>
+          <div class="col-md-5 mt-4">
+            <img src="{{ asset('formations/img/') }}{{ formation.image }}" class="img-fluid rounded" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+
+    <div class="container">
+      {% if formation.premium == 1 %}
+        {% if app.user %}
+          {% if app.user.premium %}
+            {% if app.user.premium.expiredAt <= date %}
+              <h5 class="text-danger text-center">
+                Vous n'avez pas acces au
+                <a href="{{ path('app_premium') }}">Premium</a>
+              </h5>
+              <p class="text-center">Veillez vous abonne pour suivre cette formation</p>
+            {% else %}
+              <div class="row">
+                <div class="col-md-4">
+                  <h2 class="h2">Chapitres</h2>
+                  <div class="list-group">
+                    {% for cours in formation.cours %}
+                      <a href="{{ path('app_cours', { slug: cours.formation.slug }) }}" class="d-flex list-group-item list-group-item-action {{ loop.first ? 'active' : '' }}">
+                        <div id="listenIcon" class="playIcon {{ loop.first ? 'bg-white' : 'bg-primary' }} p-2 me-2 col-md-2" style="border-radius: 50%; height: 30px; width: 30px;">
+                          <i id="playIcon{{ cours.id }}" class="fas fa-play {{ loop.first ? 'text-primary' : 'text-white' }} float-end d-block" style="cursor: pointer;"></i>
+                          <i id="pauseIcon{{ cours.id }}" class="fas fa-pause {{ loop.first ? 'text-primary' : 'text-white' }} float-end d-none" style="cursor: pointer;"></i>
+                        </div>
+                        <p class="{{ loop.first ? 'text-white' : '' }} col-md-8">{{ cours.name }}</p>
+
+                        <small class="col-md-2 float-end" style="color: #8491c7;">20 min</small>
+                      </a>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <h2 class="h2">Présentation</h2>
+                  <p>{{ formation.description }}</p>
+
+                  <small class="text-secondary">Il y a 1 mois</small>
+
+                  <div class="row mt-4 py-4">
+                    <div class="col-lg-4 col-md-6 mb-5">
+                      <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title fw-bold">Liens utiles</h5>
+                          {% if formation.formaLinks is empty %}
+                            Aucun lien existant pour cette formation.
+                          {% endif %}
+                          <ul>
+                            {% for link in formation.formaLinks %}
+                              <li>
+                                <a href="{{ link.link }}" target="_blank">{{ link.name }}</a>
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                      <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title fw-bold">Informations</h5>
+                          <ul>
+                            <li>49 min de videos</li>
+                            <li>8 chapitres</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mt-5 py-4">
+                      {% for cour in formation.cours %}
+                        <div class="position-relative" style="justify-content: center; align-items: center;">
+                          <!-- Image -->
+                          <img class="{{ loop.first ? 'd-block' : 'd-none' }} img-fluid" src="{{ asset('cours/img/') ~ cour.miniatur }}" alt="" />
+
+                          <!-- Bouton au centre -->
+                          <a href="{{ path('app_cours', { slug: cour.formation.slug }) }}" class="text-white play-video btn btn-primary position-absolute top-50 start-50 translate-middle {{ loop.first ? 'd-block' : 'd-none' }}" {{ loop.first ? 'style="display: flex !important;"' : '' }} data-video-src="{{ asset('cours/video/') ~ cour.video }}"><i class="fa fa-play"></i></a>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% else %}
+            <h5 class="text-danger text-center">
+              Vous n'avez pas acces au
+              <a href="{{ path('app_premium') }}">Premium</a>
+            </h5>
+            <p class="text-center">Veillez vous abonne pour suivre cette formation</p>
+          {% endif %}
+        {% else %}
+          <h5 class="text-danger text-center">
+            Vous n'etes pas
+            <a href="{{ path('app_login') }}">Connecter</a>
+          </h5>
+          <p class="text-center">Veillez vous connectez pour suivre cette formation</p>
+        {% endif %}
+      {% else %}
+        <div class="row">
+          <div class="col-md-4">
+            <h2 class="h2">Chapitres</h2>
+            <div class="card">
+              <div class="card-body">
+                <div class="list-group">
+                  {% for cours in formation.cours %}
+                    <a href="{{ path('app_cours', { slug: cours.formation.slug }) }}" class="d-flex list-group-item list-group-item-action {{ loop.first ? 'active' : '' }}">
+                      <div id="listenIcon" class="playIcon {{ loop.first ? 'bg-white' : 'bg-primary' }} p-2 me-2 col-md-2" style="border-radius: 50%; height: 30px; width: 30px;">
+                        <i id="playIcon{{ cours.id }}" class="fas fa-play {{ loop.first ? 'text-primary' : 'text-white' }} float-end d-block" style="cursor: pointer;"></i>
+                        <i id="pauseIcon{{ cours.id }}" class="fas fa-pause {{ loop.first ? 'text-primary' : 'text-white' }} float-end d-none" style="cursor: pointer;"></i>
+                      </div>
+                      <p class="{{ loop.first ? 'text-white' : '' }} col-md-8">{{ cours.name }}</p>
+
+                      <small class="col-md-2 float-end" style="color: #8491c7;">20 min</small>
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <h2 class="h2">Présentation</h2>
+            <p>{{ formation.description }}</p>
+
+            <small class="text-secondary">Il y a 1 mois</small>
+
+            <div class="row mt-4 py-4">
+              <div class="col-lg-4 col-md-6 mb-5">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title fw-bold">Liens utiles</h5>
+                    {% if formation.formaLinks is empty %}
+                      Aucun lien existant pour cette formation.
+                    {% endif %}
+                    <ul>
+                      {% for link in formation.formaLinks %}
+                        <li>
+                          <a href="{{ link.link }}" target="_blank">{{ link.name }}</a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-4 col-md-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title fw-bold">Informations</h5>
+                    <ul>
+                      <li>49 min de videos</li>
+                      <li>8 chapitres</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12 mt-5 py-4">
+                {% for cour in formation.cours %}
+                  <div class="position-relative" style="justify-content: center; align-items: center;">
+                    <!-- Image -->
+                    <img class="{{ loop.first ? 'd-block' : 'd-none' }} img-fluid" src="{{ asset('cours/img/') ~ cour.miniatur }}" alt="" />
+
+                    <!-- Bouton au centre -->
+                    <a href="{{ path('app_cours', { slug: cour.formation.slug }) }}" class="text-white play-video btn btn-primary position-absolute top-50 start-50 translate-middle {{ loop.first ? 'd-block' : 'd-none' }}" {{ loop.first ? "style='display: flex !important;'" : '' }} data-video-src="{{ asset('cours/video/') ~ cour.video }}"><i class="fa fa-play"></i></a>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script src="/sneat/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
+  {% if app.current_route == 'app_formations_details' %}
+    {% if formation.premium == 1 %}
+      {% if app.user %}
+        {% if app.user.premium %}
+          {% if app.user.premium.expiredAt <= date %}
+            <script defer>
+          const tadaAnimation = document.querySelector('.tada-animation')
+          // TADA ANIMATION
+          tadaAnimation.onclick = function () {
+            Swal.fire({
+              title: 'Erreur!',
+              type: 'info',
+              html: "Vous n'avez pas un acces " + '<a href=" {{ path("app_premium") }}">Premium</a> ! <br>' + 'Veillez vous abonne pour suivre cette formation',
+              showClass: {
+                popup: 'animate__animated animate__shakeX'
+              },
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              },
+              buttonsStyling: false
+            })
+          }
+        </script>
+          {% endif %}
+        {% else %}
+          <script defer>
+          const tadaAnimation = document.querySelector('.tada-animation')
+          // TADA ANIMATION
+          tadaAnimation.onclick = function () {
+            Swal.fire({
+              title: 'Erreur!',
+              type: 'info',
+              html: "Vous n'avez pas un acces " + '<a href=" {{ path("app_premium") }}">Premium</a> ! <br>' + 'Veillez vous abonne pour suivre cette formation',
+              showClass: {
+                popup: 'animate__animated animate__shakeX'
+              },
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              },
+              buttonsStyling: false
+            })
+          }
+        </script>
+        {% endif %}
+      {% else %}
+        <script defer>
+          const tadaAnimation = document.querySelector('.tada-animation')
+          // TADA ANIMATION
+          tadaAnimation.onclick = function () {
+            Swal.fire({
+              title: 'Erreur!',
+              type: 'info',
+              html: "Vous n'etes pas " + '<a href=" {{ path("app_login") }}">Connecter</a> ! <br>' + 'Veillez vous connectez pour suivre cette formation',
+              showClass: {
+                popup: 'animate__animated animate__shakeX'
+              },
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              },
+              buttonsStyling: false
+            })
+          }
+        </script>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+
+  <style>
+		.play-video {
+			border-radius: 50%;
+			height: 45px;
+			width: 45px;
+			align-items: center;
+			justify-content: center;
+			animation: animate 2s linear infinite;
+		}
+
+    plyr__control{
+      border-radius: 50%;
+			height: 45px;
+			width: 45px;
+			align-items: center;
+			justify-content: center;
+			animation: animate 2s linear infinite;
+    }
+
+		@keyframes animate {
+			0% {
+				box-shadow: 0 0 0 0 rgba(58, 78, 255, 0.651);
+			}
+			40% {
+				box-shadow: 0 0 0 50px rgba(7, 23, 255, 0);
+			}
+
+			80% {
+				box-shadow: 0 0 0 50px rgba(44, 7, 255, 0);
+			}
+
+			100% {
+				box-shadow: 0 0 0 rgba(102, 7, 255, 0);
+			}
+		}
+	</style>
+{% endblock %}

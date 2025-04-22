@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  {{ event.name }}
+  | Evenements
+{% endblock %}
+
+{% block body %}
+  <div class="" style="background: linear-gradient(231deg, #0132a3 -6.4%, #35373b 105.25%) !important; height: 100%;">
+    <div class="container py-5">
+      <div class="row">
+        <div class="col-md-8">
+          <h1 class="text-white fw-bold">
+            {{ event.name }}
+            <small><span class="badge bg-{{ event.type == 'presenciel' ? 'success' : 'warning' }}">{{ event.type == 'presenciel' ? 'Presenciel' : 'En Ligne' }}</span></small>
+          </h1>
+          <p class="text-300 d-dark-none">{{ event.description|nl2br }}</p>
+          <p class="text-600 d-light-none">{{ event.description|nl2br }}</p>
+
+          <a href="#" class="btn btn-primary text-uppercase fw-bold">S'inscrire pour l'evenement</a>
+        </div>
+        <div class="col-md-4 mt-3">
+          <img src="{{ asset('evenements/img/' ~ event.image) }}" alt="{{ event.image }}" class="img-fluid" style="border-radius: 15px;" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-2 py-3">
+    <div class="row">
+    <div class="timer mt-3">
+      <div class="row">
+        <div class="col-md-6">
+          <h3 class="text-center">Temps restant</h3>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-md-6">
+          <div class="row gap-3">
+            <div class="col-md-2">
+              <div class="col-md-12">
+                <h6 class="">Mois</h6>
+              </div>
+              <div class="col-md-12 bg-primary text-center rounded" style="height: 50px; width: 50px;">
+                <h4 class="align-items-center">2</h4>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="col-md-12">
+                <h6 class="">Jours</h6>
+              </div>
+              <div class="col-md-12 bg-primary text-center rounded" style="height: 50px; width: 50px;">
+                <h4 class="align-items-center">3</h4>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="col-md-12">
+                <h6 class="">Heures</h6>
+              </div>
+              <div class="col-md-12 bg-primary text-center rounded" style="height: 50px; width: 50px;">
+                <h4 class="align-items-center">5</h4>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="col-md-12">
+                <h6 class="">Minutes</h6>
+              </div>
+              <div class="col-md-12 bg-primary text-center rounded" style="height: 50px; width: 50px;">
+                <h4 class="align-items-center">06</h4>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="col-md-12">
+                <h6 class="">Secondes</h6>
+              </div>
+              <div class="col-md-12 bg-primary text-center rounded" style="height: 50px; width: 50px;">
+                <h4 class="align-items-center">00</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    
+    <div class="row">
+      {% for formation in event.formations %}
+        <div class="col-md-4 justify-content-center">
+          <div class="card bg-dark text-white mb-3">
+            <img src="{{ asset('formations/img/' ~ formation.image) }}" class="card-img" alt="{{ asset('formations/img/' ~ formation.image) }}" />
+            <div class="card-img-overlay">
+              <h5 class="card-title">{{ formation.name }}</h5>
+              <p class="card-text">{{ formation.description }}</p>
+              <p class="card-text">Last updated 3 mins ago</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

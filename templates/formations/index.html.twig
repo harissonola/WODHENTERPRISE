@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Formations
+{% endblock %}
+
+{% block body %}
+  <link rel="stylesheet" href="/sneat/assets/vendor/libs/animate-css/animate.css" />
+  <link rel="stylesheet" href="/sneat/assets/vendor/libs/sweetalert2/sweetalert2.css" />
+  <div class="">
+    <div class="" style="background: linear-gradient(231deg, #0132a3 -6.4%, #35373b 105.25%) !important; height: 70vh; overflow: hidden;">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <div class="py-3 mt-2">
+              <!-- Breadcrumb -->
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-style1">
+                  <li class="breadcrumb-item">
+                    <a href="{{ path('app_main') }}" class="text-primary">Accueil</a>
+                  </li>
+                  <li class="breadcrumb-item active text-white">Formations</li>
+                </ol>
+              </nav>
+            </div>
+
+            <h1 class="text-primary">Nos Formations</h1>
+            <p class="text-200 text-center text-lg-start d-dark-none text-justify">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus esse quam rerum quae obcaecati deserunt dolore aliquam laudantium. Molestias cumque aperiam expedita nisi pariatur modi? Praesentium minus consequatur natus dolorum.
+            </p>
+
+            <p class="text-200 text-center text-lg-start d-light-none  text-justify" style="color: #D3D3D3 !important;">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus esse quam rerum quae obcaecati deserunt dolore aliquam laudantium. Molestias cumque aperiam expedita nisi pariatur modi? Praesentium minus consequatur natus dolorum.
+            </p>
+          </div>
+          <div class="col-md-5 mt-4">
+            <img src="/sneat/assets/img/backgrounds/18.jpg" class="img-fluid rounded" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="main" class="container-fluid">
+      <div class="fornaList mt-3 py-3">
+        <div class="row">
+          {% for formation in formations %}
+            <div class="col-lg-6 col-md-6" data-aos="">
+              <div class="card mb-4">
+                <div class="row g-0">
+                  <div class="col-md-5">
+                    <img class="card-img" src="{{ asset('formations/img/' ~ formation.image) }}" alt="{{ formation.image }}" />
+                  </div>
+                  <div class="col-md-7">
+                    <div class="card-body">
+                      <span class="badge bg-label-{{ formation.premium == 1 ? 'warning' : 'success' }} float-end">
+                        {% if formation.premium == true %}
+                          Premium
+                        {% else %}
+                          Gratuit
+                        {% endif %}
+                      </span>
+                      <h5 class="card-title"><a class="text-dark" href="{{ path('app_formations_details', { slug: formation.slug }) }}">{{ formation.name }}</a></h5>
+                      <p class="card-text">{{ formation.description }}</p>
+                      {% if app.user %}
+                        {% if formation.premium == 1 %}
+                          {% if app.user.premium is not empty %}
+                            {% if app.user.premium.expiredAt <= date %}
+                              <button class="btn btn-outline-success me-auto mb-1 tada-animation">En Savoir plus...</button>
+                            {% else %}
+                              <a href="{{ path('app_formations_details', { slug: formation.slug }) }}" class="btn btn-outline-success me-auto">En Savoir plus...</a>
+                            {% endif %}
+                          {% else %}
+                            <button class="btn btn-outline-success me-auto mb-1 tada-animation">En Savoir plus...</button>
+                          {% endif %}
+                        {% else %}
+                          <a href="{{ path('app_formations_details', { slug: formation.slug }) }}" class="btn btn-outline-success me-auto">En Savoir plus...</a>
+                        {% endif %}
+                      {% else %}
+                        {% if formation.premium == 1 %}
+                          <button class="btn btn-outline-success me-auto mb-1 tada-animation">En Savoir plus...</button>
+                        {% else %}
+                          <a href="{{ path('app_formations_details', { slug: formation.slug }) }}" class="btn btn-outline-success me-auto">En Savoir plus...</a>
+                        {% endif %}
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% for formation in formations %}
+    {% if formation.premium == 1 %}
+      {% if app.user %}
+        {% if app.user.premium %}
+          {% if app.user.premium.expiredAt <= date %}
+            <script defer>
+              const tadaAnimation = document.querySelector('.tada-animation')
+              // TADA ANIMATION
+              tadaAnimation.onclick = function () {
+                Swal.fire({
+                  title: 'Erreur!',
+                  type: 'info',
+                  html: "Vous n'avez pas un acces " + '<a href=" {{ path("app_premium") }}">Premium</a> ! <br>' + 'Veillez vous abonne pour suivre cette formation',
+                  showClass: {
+                    popup: 'animate__animated animate__shakeX'
+                  },
+                  customClass: {
+                    confirmButton: 'btn btn-primary'
+                  },
+                  buttonsStyling: false
+                })
+              }
+            </script>
+          {% endif %}
+        {% else %}
+          <script defer>
+            const tadaAnimation = document.querySelector('.tada-animation')
+            // TADA ANIMATION
+            tadaAnimation.onclick = function () {
+              Swal.fire({
+                title: 'Erreur!',
+                type: 'info',
+                html: "Vous n'avez pas un acces " + '<a href=" {{ path("app_premium") }}">Premium</a> ! <br>' + 'Veillez vous abonne pour suivre cette formation',
+                showClass: {
+                  popup: 'animate__animated animate__shakeX'
+                },
+                customClass: {
+                  confirmButton: 'btn btn-primary'
+                },
+                buttonsStyling: false
+              })
+            }
+          </script>
+        {% endif %}
+      {% else %}
+        <script defer>
+          const tadaAnimation = document.querySelector('.tada-animation')
+          // TADA ANIMATION
+          tadaAnimation.onclick = function () {
+            Swal.fire({
+              title: 'Erreur!',
+              type: 'info',
+              html: 'Veillez vous ' + '<a href=" {{ path("app_login") }}">Connecter</a> ! <br>' + 'pour acceder a cette formation',
+              showClass: {
+                popup: 'animate__animated animate__shakeX'
+              },
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              },
+              buttonsStyling: false
+            })
+          }
+        </script>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  <script src="/sneat/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}
+  {% if app.current_route == 'app_admin_events_add' %}
+    Ajouter
+  {% else %}
+    Modifier
+  {% endif %}| Events
+{% endblock %}
+
+{% block body %}
+  <link rel="stylesheet" href="/sneat/assets/vendor/libs/flatpickr/flatpickr.css" />
+  <div class="py-4 mt-5">
+    <div class="card">
+      <h1 class="card-title text-center">
+        {% if app.current_route == 'app_admin_events_add' %}
+          Ajouter
+        {% else %}
+          Modifier
+        {% endif %}un Evenement
+      </h1>
+      <div class="card-body">
+        {% if app.current_route == 'app_admin_events_edit' %}
+          <div class="row justify-content-center">
+            <img src="{{ asset('evenements/img/' ~ event.image) }}" alt="{{ event.image }}" class="img-fluid" style="max-width: 200px; border-radius: 20%;" />
+          </div>
+        {% endif %}
+        {{ form(form, { method: 'POST' }) }}
+      </div>
+    </div>
+  </div>
+  <script src="/sneat/assets/vendor/libs/flatpickr/flatpickr.js"></script>
+
+  <script>
+    var flatpickrDateTime = document.querySelector('#event_date')
+    
+    flatpickrDateTime.flatpickr({
+      enableTime: true,
+      dateFormat: 'Y-m-d H:i'
+    })
+  </script>
+{% endblock %}

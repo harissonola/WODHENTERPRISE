@@ -1,0 +1,19 @@
+{% apply inky_to_html %}
+    <container>
+        <row class="header" style="background-color: #f4f6f9; padding: 20px; text-align: center;">
+            <columns>
+                <h1 style="color: #333; font-size: 24px; font-family: 'Arial', sans-serif;">Une nouvelle demande de contact a ete recue</h1>
+                
+                <h4 style="color: #555; font-size: 16px; font-family: 'Arial', sans-serif;">
+                    {{data.name}} ({{data.email}}) a envoye ce message.
+                </h4>
+
+                <div style="background-color: #ffffff; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <p style="color: #555; font-size: 14px; line-height: 1.6; font-family: 'Arial', sans-serif;">
+                        {{data.message | nl2br}}
+                    </p>
+                </div>
+            </columns>
+        </row>
+    </container>
+{% endapply %}
